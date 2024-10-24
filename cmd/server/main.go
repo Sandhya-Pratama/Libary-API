@@ -9,8 +9,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/go-redis/redis"
-	"github.com/labstack/echo"
+	"github.com/Sandhya-Pratama/Libary-API/internal/builder"
+	"github.com/Sandhya-Pratama/Libary-API/internal/config"
+	"github.com/Sandhya-Pratama/Libary-API/internal/http/binder"
+	"github.com/Sandhya-Pratama/Libary-API/internal/http/server"
+	"github.com/Sandhya-Pratama/Libary-API/internal/http/validator"
+	"github.com/go-redis/redis/v8"
+	"github.com/labstack/echo/v4"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -113,14 +118,12 @@ func splash() {
 	colorReset := "\030[0m"
 
 	splashText := `
- _   _                                                           
- | \ | |                                        /\                
- |  \| | __ _  ___  _ __  ___  ___ _ __ ______ /  \   _ __  _ __  
- | .   |/ _  |/ _ \| '_ \/ __|/ _ \ '__|______/ /\ \ | '_ \| '_ \ 
- | |\  | (_| | (_) | | | \__ \  __/ |        / ____ \| |_) | |_) |
- |_| \_|\__, |\___/|_| |_|___/\___|_|       /_/    \_\ .__/| .__/ 
-         __/ |                                       | |   | |    
-        |___/                                        |_|   |_|        
+.____    ._____.                                          _____                 
+|    |   |__\_ |______________ _______ ___.__.           /  _  \ ______ ______  
+|    |   |  || __ \_  __ \__  \\_  __ <   |  |  ______  /  /_\  \\____ \\____ \ 
+|    |___|  || \_\ \  | \// __ \|  | \/\___  | /_____/ /    |    \  |_> >  |_> >
+|_______ \__||___  /__|  (____  /__|   / ____|         \____|__  /   __/|   __/ 
+        \/       \/           \/       \/                      \/|__|   |__|                                          |_|   |_|        
 `
 	fmt.Println(colorReset, strings.TrimSpace(splashText))
 }
