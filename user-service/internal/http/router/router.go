@@ -20,7 +20,7 @@ type Route struct {
 	Method  string
 	Path    string
 	Handler echo.HandlerFunc
-	Roles   []string
+	Role    []string
 }
 
 func PublicRoutes(authHandler *handler.AuthHandler) []*Route {
@@ -44,21 +44,21 @@ func PrivateRoutes(userHandler *handler.UserHandler) []*Route {
 			Method:  echo.POST,
 			Path:    "/users",
 			Handler: userHandler.CreateUser,
-			Roles:   allRoles,
+			Role:    onlyAdmin,
 		},
 
 		{
 			Method:  echo.GET,
 			Path:    "/users",
 			Handler: userHandler.GetAllUsers,
-			Roles:   onlyAdmin,
+			Role:    onlyAdmin,
 		},
 
 		{
 			Method:  echo.PUT,
 			Path:    "/users/:id",
 			Handler: userHandler.UpdateUser,
-			Roles:   allRoles,
+			Role:    onlyAdmin,
 		},
 	}
 }

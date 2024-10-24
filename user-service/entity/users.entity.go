@@ -35,8 +35,9 @@ func Register(username, email, password, role string) *User {
 	}
 }
 
-func UpdateUser(username, email, password, role string) *User {
+func UpdateUser(id int64, username, email, password, role string) *User {
 	return &User{
+		ID:        id,
 		Username:  username,
 		Email:     email,
 		Password:  password,

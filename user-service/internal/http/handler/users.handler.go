@@ -33,14 +33,14 @@ func (h *UserHandler) CreateUser(ctx echo.Context) error {
 	var input struct {
 		Username string `json:"usename" validate:"required"`
 		Email    string `json:"email" validate:"email"`
-		Roles    string `json:"roles" validate:"oneof=Admin User"`
 		Password string `json:"password"`
+		Role     string `json:"role" validate:"oneof=Admin User"`
 	}
 	//ini func untuk error checking
 	if err := ctx.Bind(&input); err != nil {
 		return ctx.JSON(http.StatusBadRequest, validator.ValidatorErrors(err))
 	}
-	user := entity.NewUser(input.Username, input.Email, input.Roles, input.Password)
+	user := entity.NewUser(input.Username, input.Email, input.Password, input.Role)
 	err := h.userService.CreateUser(ctx.Request().Context(), user)
 	if err != nil {
 		return ctx.JSON(http.StatusUnprocessableEntity, err)
@@ -52,18 +52,19 @@ func (h *UserHandler) CreateUser(ctx echo.Context) error {
 // func untuk melakukan updateUser by id
 func (h *UserHandler) UpdateUser(ctx echo.Context) error {
 	var input struct {
-		ID       int64  `param:"id" validate:"required"`
-		Username string `json:"usename"`
+		ID       int64  `json:"id"`
+		Username string `json:"username"` // Diperbaiki dari "usename" ke "username"
 		Email    string `json:"email" validate:"email"`
-		Roles    string `json:"roles" validate:"oneof=Admin User"`
 		Password string `json:"password"`
+		Role     string `json:"role" validate:"oneof=Admin User"`
 	}
 
+	// Bind JSON input
 	if err := ctx.Bind(&input); err != nil {
 		return ctx.JSON(http.StatusBadRequest, validator.ValidatorErrors(err))
 	}
 
-	user := entity.UpdateUser(input.Username, input.Email, input.Roles, input.Password)
+	user := entity.UpdateUser(input.ID, input.Username, input.Email, input.Password, input.Role)
 
 	err := h.userService.UpdateUser(ctx.Request().Context(), user)
 	if err != nil {
@@ -71,4 +72,19 @@ func (h *UserHandler) UpdateUser(ctx echo.Context) error {
 	}
 
 	return ctx.JSON(http.StatusOK, map[string]string{"success": "succesfully update user"})
+}
+
+// func untuk melakukan deleteUser by id
+func (h *UserHandler) DeleteUser(ctx echo.Context) error {
+	var input struct {
+		ID int64 `json:"id"`
+	}
+	if err := ctx.Bind(&input); err != nil {
+		return ctx.JSON(http.StatusBadRequest, validator.ValidatorErrors(err))
+	}
+	err := h.userService.DeleteUser(ctx.Request().Context(), input.ID)
+	if err != nil {
+		return ctx.JSON(http.StatusUnprocessableEntity, err.Error())
+	}
+	return ctx.JSON(http.StatusOK, map[string]string{"success": "succesfully delete user"})
 }

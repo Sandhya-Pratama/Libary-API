@@ -44,7 +44,7 @@ func NewServer(
 
 	//ketika sudah ingin menggunakan middleware, maka menambahkan private.Middleware.
 	for _, private := range privateRoutes {
-		v1.Add(private.Method, private.Path, private.Handler, JWTProtected(cfg.JWT.SecretKey), RBACMiddleware(private.Roles...))
+		v1.Add(private.Method, private.Path, private.Handler, JWTProtected(cfg.JWT.SecretKey), RBACMiddleware(private.Role...))
 	}
 
 	e.GET("/ping", func(c echo.Context) error {

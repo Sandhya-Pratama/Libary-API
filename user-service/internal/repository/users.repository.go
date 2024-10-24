@@ -46,6 +46,13 @@ func (r *UserRepository) UpdateUser(ctx context.Context, user *entity.User) erro
 	return nil
 }
 
+func (r *UserRepository) DeleteUser(ctx context.Context, id int64) error {
+	if err := r.db.WithContext(ctx).Delete(&entity.User{}, id).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func (r *UserRepository) GetUserByUsername(ctx context.Context, username string) (*entity.User, error) {
 	var user entity.User
 
