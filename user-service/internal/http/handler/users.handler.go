@@ -10,17 +10,17 @@ import (
 )
 
 type UserHandler struct {
-	userService service.UserUsecase
+	userService service.UserUseCase
 }
 
 // melakukan instace dari user handler
-func NewUserHandler(userService service.UserUsecase) *UserHandler {
+func NewUserHandler(userService service.UserUseCase) *UserHandler {
 	return &UserHandler{userService}
 }
 
 // func untuk melakukan getAll User
-func (h *UserHandler) GetAllUser(ctx echo.Context) error {
-	users, err := h.userService.GetAllUser(ctx.Request().Context())
+func (h *UserHandler) GetAllUsers(ctx echo.Context) error {
+	users, err := h.userService.GetAllUsers(ctx.Request().Context())
 	if err != nil {
 		return ctx.JSON(http.StatusUnprocessableEntity, err)
 	}
@@ -63,7 +63,7 @@ func (h *UserHandler) UpdateUser(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, validator.ValidatorErrors(err))
 	}
 
-	user := entity.UpdateUser(input.ID, input.Username, input.Email, input.Roles, input.Password)
+	user := entity.UpdateUser(input.Username, input.Email, input.Roles, input.Password)
 
 	err := h.userService.UpdateUser(ctx.Request().Context(), user)
 	if err != nil {

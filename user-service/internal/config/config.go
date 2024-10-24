@@ -12,8 +12,8 @@ import (
 type Config struct {
 	Port     string         `env:"PORT" envDefault:"8080"`
 	Postgres PostgresConfig `envPrefix:"POSTGRES_"`
-	Redis    RedisConfig    `envPrefix:"REDIS_"`
-	JWT      JWTConfig      `envPrefix:"JWT_"`
+	// Redis    RedisConfig    `envPrefix:"REDIS_"`
+	JWT JWTConfig `envPrefix:"JWT_"`
 }
 
 // struct postgres
@@ -26,11 +26,11 @@ type PostgresConfig struct {
 }
 
 // struct redis
-type RedisConfig struct {
-	Host     string `env:"HOST" envDefault:"localhost"`
-	Port     string `env:"PORT" envDefault:"6379"`
-	Password string `env:"PASSWORD" envDefault:""`
-}
+// type RedisConfig struct {
+// 	Host     string `env:"HOST" envDefault:"localhost"`
+// 	Port     string `env:"PORT" envDefault:"6379"`
+// 	Password string `env:"PASSWORD" envDefault:""`
+// }
 
 // struct jwt
 type JWTConfig struct {

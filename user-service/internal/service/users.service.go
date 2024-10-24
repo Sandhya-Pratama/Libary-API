@@ -6,8 +6,8 @@ import (
 	"github.com/Sandhya-Pratama/Libary-API/entity"
 )
 
-type UserUsecase interface {
-	GetAllUser(ctx context.Context) ([]*entity.User, error)
+type UserUseCase interface {
+	GetAllUsers(ctx context.Context) ([]*entity.User, error)
 	CreateUser(ctx context.Context, user *entity.User) error
 	UpdateUser(ctx context.Context, user *entity.User) error
 }
@@ -16,7 +16,7 @@ type UserUsecase interface {
 // untuk memanggil repository
 // GetAll = untuk menampilkan semua data user, dan itu harus sama dengan yang ada di repository
 type UserRepository interface {
-	GetAll(ctx context.Context) ([]*entity.User, error)
+	GetAllUsers(ctx context.Context) ([]*entity.User, error)
 	CreateUser(ctx context.Context, user *entity.User) error
 	UpdateUser(ctx context.Context, user *entity.User) error
 }
@@ -32,11 +32,9 @@ func NewUserService(repository UserRepository) *UserService {
 	return &UserService{repository}
 }
 
-// func dibawah ini untuk type user usecase
-// ini untuk menampilkan data user
 // untuk memanggil repository
-func (s *UserService) GetAll(ctx context.Context) ([]*entity.User, error) {
-	return s.repository.GetAll(ctx)
+func (s *UserService) GetAllUsers(ctx context.Context) ([]*entity.User, error) {
+	return s.repository.GetAllUsers(ctx)
 }
 
 // func dibawah ini untuk type user usecase

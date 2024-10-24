@@ -23,8 +23,19 @@ type Route struct {
 	Roles   []string
 }
 
-func PublicRoutes() []*Route {
-	return []*Route{}
+func PublicRoutes(authHandler *handler.AuthHandler) []*Route {
+	return []*Route{
+		{
+			Method:  echo.POST,
+			Path:    "/login",
+			Handler: authHandler.Login,
+		},
+		{
+			Method:  echo.POST,
+			Path:    "/register",
+			Handler: authHandler.Registration,
+		},
+	}
 }
 
 func PrivateRoutes(userHandler *handler.UserHandler) []*Route {
@@ -39,7 +50,7 @@ func PrivateRoutes(userHandler *handler.UserHandler) []*Route {
 		{
 			Method:  echo.GET,
 			Path:    "/users",
-			Handler: userHandler.GetAllUser,
+			Handler: userHandler.GetAllUsers,
 			Roles:   onlyAdmin,
 		},
 

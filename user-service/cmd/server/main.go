@@ -14,7 +14,6 @@ import (
 	"github.com/Sandhya-Pratama/Libary-API/internal/http/binder"
 	"github.com/Sandhya-Pratama/Libary-API/internal/http/server"
 	"github.com/Sandhya-Pratama/Libary-API/internal/http/validator"
-	"github.com/go-redis/redis/v8"
 	"github.com/labstack/echo/v4"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -34,11 +33,11 @@ func main() {
 	checkError(err)
 
 	//membuat koneksi ke redis
-	redisClient := buildRedis(cfg)
+	// redisClient := buildRedis(cfg)
 
 	//membuat routes
-	publicRoutes := builder.BuildPublicRoutes(cfg, db, redisClient)
-	privateRoutes := builder.BuildPrivateRoutes(cfg, db, redisClient)
+	publicRoutes := builder.BuildPublicRoutes(cfg, db)
+	privateRoutes := builder.BuildPrivateRoutes(cfg, db)
 
 	//membuat binder
 	echoBinder := &echo.DefaultBinder{}
@@ -104,14 +103,14 @@ func buildGormDB(cfg config.PostgresConfig) (*gorm.DB, error) {
 }
 
 // func untuk koneksi ke redis
-func buildRedis(cfg *config.Config) *redis.Client {
-	client := redis.NewClient(&redis.Options{
-		Addr:     fmt.Sprintf("%s:%s", cfg.Redis.Host, cfg.Redis.Port),
-		Password: cfg.Redis.Password,
-		DB:       0,
-	})
-	return client
-}
+// func buildRedis(cfg *config.Config) *redis.Client {
+// 	client := redis.NewClient(&redis.Options{
+// 		Addr:     fmt.Sprintf("%s:%s", cfg.Redis.Host, cfg.Redis.Port),
+// 		Password: cfg.Redis.Password,
+// 		DB:       0,
+// 	})
+// 	return client
+// }
 
 // untuk membuat spalsh menggunakan patorjk.com
 func splash() {

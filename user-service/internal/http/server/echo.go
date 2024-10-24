@@ -83,7 +83,7 @@ func RBACMiddleware(roles ...string) echo.MiddlewareFunc {
 			claims := user.Claims.(*common.JwtCustomClaims)
 
 			// Check if the user has the required role
-			if !contains(roles, claims.Roles) {
+			if !contains(roles, claims.Role) {
 				return c.JSON(http.StatusForbidden, map[string]string{"error": "anda tidak diperbolehkan untuk mengakses resource ini"})
 			}
 
