@@ -53,6 +53,6 @@ func (s *UserService) UpdateUser(ctx context.Context, user *entity.User) error {
 	return s.repository.UpdateUser(ctx, user)
 }
 
-func (s *UserService) DeleteUSer(ctx context.Context, id int64) error {
+func (s *UserService) DeleteUser(ctx context.Context, id int64) error {
 	return s.repository.DeleteUser(ctx, id)
 }
