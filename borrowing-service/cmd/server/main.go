@@ -9,11 +9,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Sandhya-Pratama/Libary-API/book-service/internal/builder"
-	"github.com/Sandhya-Pratama/Libary-API/book-service/internal/config"
-	"github.com/Sandhya-Pratama/Libary-API/book-service/internal/http/binder"
-	"github.com/Sandhya-Pratama/Libary-API/book-service/internal/http/server"
-	"github.com/Sandhya-Pratama/Libary-API/book-service/internal/http/validator"
+	"github.com/Sandhya-Pratama/Libary-API/borrowing-service/internal/builder"
+	"github.com/Sandhya-Pratama/Libary-API/borrowing-service/internal/config"
+	"github.com/Sandhya-Pratama/Libary-API/borrowing-service/internal/http/binder"
+	"github.com/Sandhya-Pratama/Libary-API/borrowing-service/internal/http/server"
+	"github.com/Sandhya-Pratama/Libary-API/borrowing-service/internal/http/validator"
 	"github.com/labstack/echo/v4"
 
 	"gorm.io/driver/postgres"

@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    build:
+      context: ./api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - JWT_SECRET=your_secret_key
+    depends_on:
+      - book-service
+      - borrowing-service
+
+  book-service:
+    build:
+      context: ./book-service
+    ports:
+      - "50051:50051"
+      
+  borrowing-service:
+    build:
+      context: ./borrowing-service
+    ports:
+      - "50052:50052"
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: sandhya123
+      POSTGRES_DB: library
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:

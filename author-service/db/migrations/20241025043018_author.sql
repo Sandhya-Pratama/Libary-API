@@ -1,3 +1,4 @@
+-- +goose Up
 CREATE TABLE public.authors (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
