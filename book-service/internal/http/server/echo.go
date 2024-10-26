@@ -3,7 +3,7 @@ package server
 import (
 	"net/http"
 
-	"github.com/Sandhya-Pratama/Libary-API/book-service/common"
+	common "github.com/Sandhya-Pratama/Libary-API/book-service/common/middleware"
 	"github.com/Sandhya-Pratama/Libary-API/book-service/internal/config"
 	"github.com/Sandhya-Pratama/Libary-API/book-service/internal/http/binder"
 	"github.com/Sandhya-Pratama/Libary-API/book-service/internal/http/router"
@@ -11,6 +11,7 @@ import (
 	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type Server struct {
@@ -45,6 +46,18 @@ func NewServer(
 	for _, private := range privateRoutes {
 		v1.Add(private.Method, private.Path, private.Handler, JWTProtected(cfg.JWT.SecretKey), RBACMiddleware(private.Role...))
 	}
+
+	e.GET("/ping", func(c echo.Context) error {
+		return c.String(200, "pong")
+	})
+
+	//handler untuk generate password secara manual
+	e.GET("/generate-password/:password", func(c echo.Context) error {
+		password := c.Param("password")
+		hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+		return c.String(200, string(hashedPassword))
+	})
+
 	return &Server{e}
 }
 

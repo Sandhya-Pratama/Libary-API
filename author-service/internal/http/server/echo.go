@@ -3,7 +3,7 @@ package server
 import (
 	"net/http"
 
-	"github.com/Sandhya-Pratama/Libary-API/author-service/common"
+	common "github.com/Sandhya-Pratama/Libary-API/author-service/common/middleware"
 	"github.com/Sandhya-Pratama/Libary-API/author-service/internal/config"
 	"github.com/Sandhya-Pratama/Libary-API/author-service/internal/http/binder"
 	"github.com/Sandhya-Pratama/Libary-API/author-service/internal/http/router"

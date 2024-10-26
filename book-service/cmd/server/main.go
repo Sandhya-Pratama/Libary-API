@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net"
 	"os"
 	"os/signal"
 	"strings"
@@ -15,10 +16,29 @@ import (
 	"github.com/Sandhya-Pratama/Libary-API/book-service/internal/http/server"
 	"github.com/Sandhya-Pratama/Libary-API/book-service/internal/http/validator"
 	"github.com/labstack/echo/v4"
+	"google.golang.org/grpc"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
+
+func startGRPCServer() {
+	grpcServer := grpc.NewServer()
+
+	// Implementasikan service gRPC yang akan dijalankan di sini, misalnya:
+	// pb.RegisterBookServiceServer(grpcServer, &BookService{}) // gRPC service
+
+	lis, err := net.Listen("tcp", ":50051") // Port gRPC server
+	if err != nil {
+		log.Fatalf("Failed to listen on gRPC port: %v", err)
+	}
+
+	fmt.Println("gRPC server is running on port 50051")
+
+	if err := grpcServer.Serve(lis); err != nil {
+		log.Fatalf("Failed to serve gRPC server: %v", err)
+	}
+}
 
 func main() {
 	//membuat config ke env

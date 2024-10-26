@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package category;
+option go_package = "category-service/common/proto;category";
+
+// Service untuk operasi CRUD Category
+service CategoryService {
+  // Mendapatkan semua kategori
+  rpc GetAllCategories (Empty) returns (CategoryListResponse);
+
+  // Membuat kategori baru
+  rpc CreateCategory (CategoryRequest) returns (CategoryResponse);
+
+  // Memperbarui kategori berdasarkan ID
+  rpc UpdateCategory (UpdateCategoryRequest) returns (CategoryResponse);
+
+  // Menghapus kategori berdasarkan ID
+  rpc DeleteCategory (DeleteCategoryRequest) returns (Empty);
+}
+
+// Pesan untuk membuat atau memperbarui kategori
+message CategoryRequest {
+  string name = 1;
+}
+
+// Pesan untuk memperbarui kategori
+message UpdateCategoryRequest {
+  int64 id = 1;
+  string name = 2;
+}
+
+// Pesan untuk menghapus kategori
+message DeleteCategoryRequest {
+  int64 id = 1;
+}
+
+// Pesan untuk respon kategori
+message CategoryResponse {
+  int64 id = 1;
+  string name = 2;
+}
+
+// Pesan untuk respon daftar kategori
+message CategoryListResponse {
+  repeated CategoryResponse categories = 1;
+}
+
+// Pesan kosong
+message Empty {}

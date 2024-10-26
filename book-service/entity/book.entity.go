@@ -5,21 +5,19 @@ import "time"
 type Book struct {
 	ID         int64
 	Title      string
-	Author     string
-	Year       int
-	Stock      int
+	ISBN       int64
 	AuthorID   int64
 	CategoryID int64
+	Stock      int64
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 	DeletedAt  *time.Time
 }
 
-func NewBook(title, author string, year, stock int, authorID, categoryID int64) *Book {
+func NewBook(title string, isbn, stock, authorID, categoryID int64) *Book {
 	return &Book{
 		Title:      title,
-		Author:     author,
-		Year:       year,
+		ISBN:       isbn,
 		Stock:      stock,
 		AuthorID:   authorID,
 		CategoryID: categoryID,
@@ -27,12 +25,11 @@ func NewBook(title, author string, year, stock int, authorID, categoryID int64) 
 	}
 }
 
-func UpdateBook(id int64, title, author string, year, stock int, authorID, categoryID int64) *Book {
+func UpdateBook(id int64, title string, isbn, stock, authorID, categoryID int64) *Book {
 	return &Book{
 		ID:         id,
 		Title:      title,
-		Author:     author,
-		Year:       year,
+		ISBN:       isbn,
 		Stock:      stock,
 		AuthorID:   authorID,
 		CategoryID: categoryID,

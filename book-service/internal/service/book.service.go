@@ -9,6 +9,7 @@ import (
 type BookUseCase interface {
 	GetAllBooks(ctx context.Context) ([]*entity.Book, error)
 	CreateBook(ctx context.Context, book *entity.Book) error
+	GetBookByID(ctx context.Context, id int64) (*entity.Book, error)
 	UpdateBook(ctx context.Context, book *entity.Book) error
 	DeleteBook(ctx context.Context, id int64) error
 }
@@ -16,6 +17,7 @@ type BookUseCase interface {
 type BookRepository interface {
 	GetAllBooks(ctx context.Context) ([]*entity.Book, error)
 	CreateBook(ctx context.Context, book *entity.Book) error
+	GetBookByID(ctx context.Context, id int64) (*entity.Book, error)
 	UpdateBook(ctx context.Context, book *entity.Book) error
 	DeleteBook(ctx context.Context, id int64) error
 }
@@ -36,6 +38,10 @@ func (s *BookService) GetAllBooks(ctx context.Context) ([]*entity.Book, error) {
 
 func (s *BookService) CreateBook(ctx context.Context, book *entity.Book) error {
 	return s.repository.CreateBook(ctx, book)
+}
+
+func (s *BookService) GetBookByID(ctx context.Context, id int64) (*entity.Book, error) {
+	return s.repository.GetBookByID(ctx, id)
 }
 
 func (s *BookService) UpdateBook(ctx context.Context, book *entity.Book) error {

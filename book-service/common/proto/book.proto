@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package book;
+option go_package = "book-service/common/proto;book";
+
+// Definisikan gRPC Service untuk BookService
+service BookService {
+  // Buat buku baru
+  rpc CreateBook (CreateBookRequest) returns (CreateBookResponse);
+
+  // Mendapatkan detail buku berdasarkan ID
+  rpc GetBookByID (GetBookByIDRequest) returns (GetBookByIDResponse);
+
+  // Update detail buku
+  rpc UpdateBook (UpdateBookRequest) returns (UpdateBookResponse);
+
+  // Hapus buku berdasarkan ID
+  rpc DeleteBook (DeleteBookRequest) returns (DeleteBookResponse);
+}
+
+// Message untuk entitas Book
+message Book {
+  string title = 2;
+  int64 isbn = 3;
+  int64 author_id = 4; 
+  int64 category_id = 5;
+  int64 stock = 6;
+  
+}
+
+// Request dan Response untuk setiap RPC
+
+// CreateBook
+message CreateBookRequest {
+  string title = 2;
+  int64 isbn = 3;
+  int64 author_id = 4; 
+  int64 category_id = 5;
+  int64 stock = 6;
+}
+
+message CreateBookResponse {
+  Book book = 1;
+}
+
+// GetBookByID
+message GetBookByIDRequest {
+  int64 id = 1;
+}
+
+message GetBookByIDResponse {
+  Book book = 1;
+}
+
+// UpdateBook
+message UpdateBookRequest {
+  int64 id = 1;
+  string title = 2;
+  int64 isbn = 3;
+  int64 author_id = 4; 
+  int64 category_id = 5;
+  int64 stock = 6;
+}
+
+message UpdateBookResponse {
+  Book book = 1;
+}
+
+// DeleteBook
+message DeleteBookRequest {
+  int64 id = 1;
+}
+
+message DeleteBookResponse {
+  string message = 1;
+}
