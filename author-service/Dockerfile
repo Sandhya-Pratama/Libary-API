@@ -1,13 +1,11 @@
-FROM golang:1.20
+FROM golang:latest
 
 WORKDIR /app
 
 COPY . .
 
-RUN go mod download
+RUN go mod tidy
 
-RUN go build -o author-service main.go
-
-EXPOSE 50052
+RUN go build -o author-service cmd/server/main.go
 
 CMD ["./author-service"]

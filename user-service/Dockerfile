@@ -1,13 +1,11 @@
-# Gunakan Golang sebagai base image
-FROM golang:1.19-alpine
+FROM golang:latest
 
-# Setel direktori kerja
 WORKDIR /app
 
-# Copy go mod dan sum files
-COPY go.mod go.sum ./
+COPY . .
 
-# Download dependencies
-RUN go mod download
+RUN go mod tidy
 
-# Copy seluruh kode sumber
+RUN go build -o user-service cmd/server/main.go
+
+CMD ["./user-service"]
