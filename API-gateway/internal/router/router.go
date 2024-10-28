@@ -1,20 +1,36 @@
 package router
 
-func SetupRouter(cfg *config.Config) *mux.Router {
-	r := mux.NewRouter()
+import (
+	"github.com/labstack/echo/v4"
+)
 
-	// Middleware for JWT authentication
-	r.Use(middleware.JwtAuthMiddleware(cfg.JwtSecret))
+func InitRoutes(e *echo.Echo, authorHandler *handler.AuthorHandler, bookHandler *handler.BookHandler, categoryHandler *handler.CategoryHandler, userHandler *handler.UserHandler, authHandler *handler.AuthHandler) {
+	api := e.Group("/api")
 
-	// Route Handlers
-	r.HandleFunc("/api/books", handler.GetBooks).Methods("GET")
-	r.HandleFunc("/api/books/{id}", handler.GetBookByID).Methods("GET")
-	r.HandleFunc("/api/authors", handler.GetAuthors).Methods("GET")
-	r.HandleFunc("/api/categories", handler.GetCategories).Methods("GET")
-	r.HandleFunc("/api/users", handler.GetUsers).Methods("GET")
-	r.HandleFunc("/api/borrowings", handler.GetBorrowings).Methods("GET")
-	r.HandleFunc("/api/borrowings", handler.CreateBorrowing).Methods("POST")
-	r.HandleFunc("/api/borrowings/{id}/return", handler.ReturnBorrowing).Methods("POST")
+	// Routes untuk Author Service
+	api.GET("/authors", authorHandler.GetAllAuthors)
+	api.POST("/authors", authorHandler.CreateAuthor)
+	api.PUT("/authors/:id", authorHandler.UpdateAuthor)
+	api.DELETE("/authors/:id", authorHandler.DeleteAuthor)
 
-	return r
+	// Routes untuk Book Service
+	api.GET("/books", bookHandler.GetAllBooks)
+	api.POST("/books", bookHandler.CreateBook)
+	api.PUT("/books/:id", bookHandler.UpdateBook)
+	api.DELETE("/books/:id", bookHandler.DeleteBook)
+
+	// Routes untuk Category Service
+	api.GET("/categories", categoryHandler.GetAllCategories)
+	api.POST("/categories", categoryHandler.CreateCategory)
+	api.PUT("/categories/:id", categoryHandler.UpdateCategory)
+	api.DELETE("/categories/:id", categoryHandler.DeleteCategory)
+
+	// Routes untuk User Service
+	api.GET("/users", userHandler.GetAllUsers)
+	api.POST("/users", userHandler.CreateUser)
+	api.PUT("/users/:id", userHandler.UpdateUser)
+	api.DELETE("/users/:id", userHandler.DeleteUser)
+
+	// Routes untuk Auth Service
+	api.POST("/auth/login", authHandler.Login)
 }

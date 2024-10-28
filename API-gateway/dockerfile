@@ -1,0 +1,27 @@
+# Use Golang as the base image
+FROM golang:lastest 
+
+# Set environment variables
+ENV GO111MODULE=on
+ENV GOPROXY=https://proxy.golang.org,direct
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the Go Modules files
+COPY go.mod go.sum ./
+
+# Download dependencies
+RUN go mod download
+
+# Copy the source code
+COPY . .
+
+# Build the Go application
+RUN go build -o api-gateway ./cmd/server
+
+# Expose port
+EXPOSE 8080
+
+# Command to run the executable
+CMD ["./api-gateway"]

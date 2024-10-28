@@ -1,13 +1,13 @@
-FROM golang:1.20
+FROM golang:latest
+
+RUN apk update && apk add --no-cache git
 
 WORKDIR /app
 
 COPY . .
 
-RUN go mod download
+RUN go mod tidy
 
-RUN go build -o category-service main.go
-
-EXPOSE 50051
+RUN go build -o category-service cmd/server/main.go
 
 CMD ["./category-service"]

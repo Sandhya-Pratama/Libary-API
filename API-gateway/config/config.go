@@ -5,30 +5,21 @@ import (
 )
 
 type Config struct {
-	Port         string
-	BorrowingSvc string
-	BookSvc      string
-	AuthorSvc    string
-	CategorySvc  string
-	UserSvc      string
-	JwtSecret    string
+	JWTSecret            string
+	AuthorService        string
+	BookService          string
+	CategoryService      string
+	UserService          string
+	BorrowingBookService string
 }
 
 func LoadConfig() *Config {
 	return &Config{
-		Port:         getEnv("API_GATEWAY_PORT", "8080"),
-		BorrowingSvc: getEnv("BORROWING_SERVICE", "localhost:8081"),
-		BookSvc:      getEnv("BOOK_SERVICE", "localhost:8082"),
-		AuthorSvc:    getEnv("AUTHOR_SERVICE", "localhost:8083"),
-		CategorySvc:  getEnv("CATEGORY_SERVICE", "localhost:8084"),
-		UserSvc:      getEnv("USER_SERVICE", "localhost:8085"),
-		JwtSecret:    getEnv("JWT_SECRET", "your_jwt_secret"),
+		JWTSecret:            os.Getenv("JWT_SECRET"),
+		AuthorService:        os.Getenv("AUTHOR_SERVICE"),
+		BookService:          os.Getenv("BOOK_SERVICE"),
+		CategoryService:      os.Getenv("CATEGORY_SERVICE"),
+		UserService:          os.Getenv("USER_SERVICE"),
+		BorrowingBookService: os.Getenv("BORROWING_BOOK_SERVICE"),
 	}
-}
-
-func getEnv(key, fallback string) string {
-	if value, exists := os.LookupEnv(key); exists {
-		return value
-	}
-	return fallback
 }
