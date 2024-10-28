@@ -12,22 +12,22 @@ A scalable library management system built using a microservices architecture. T
 - JWT Authentication: Secure endpoints with JSON Web Token (JWT) for authentication and authorization.
 
 **Technology Stack**
--Programming Language: Go (Golang)
--Database: PostgreSQL (each service has its own database)
--Architecture: Microservices
--Inter-service Communication: gRPC
--Authentication: JWT
--Containerization: Docker
--Orchestration: Docker Compose
+- Programming Language: Go (Golang)
+- Database: PostgreSQL (each service has its own database)
+- Architecture: Microservices
+- Inter-service Communication: gRPC
+- Authentication: JWT
+- Containerization: Docker
+- Orchestration: Docker Compose
 
 **Microservices**
 The application is divided into several microservices, each with its own database:
 
--User Service: Manages users and authentication.
--Author Service: Manages authors' information.
--Category Service: Manages book categories.
--Book Service: Manages book data and stock.
--Borrowing Service: Manages borrowing and returning of books.
+- User Service: Manages users and authentication.
+- Author Service: Manages authors' information.
+- Category Service: Manages book categories.
+- Book Service: Manages book data and stock.
+- Borrowing Service: Manages borrowing and returning of books.
 
 **Directory Structure**
 library-management-system/
@@ -80,11 +80,11 @@ docker-compose up --build
 4. Accessing the Services
 Once the services are running, you can access the APIs directly via the following ports:
 
--User Service: http://localhost:8080/api/v1/users
--Author Service: http://localhost:8081/api/v1/authors
--Category Service: http://localhost:8082/api/v1/categories
--Book Service: http://localhost:8083/api/v1/books
--Borrowing Service: http://localhost:8084/api/v1/borrowings
+- User Service: http://localhost:8080/api/v1/users
+- Author Service: http://localhost:8081/api/v1/authors
+- Category Service: http://localhost:8082/api/v1/categories
+- Book Service: http://localhost:8083/api/v1/books
+- Borrowing Service: http://localhost:8084/api/v1/borrowings
 
 5. gRPC Communication
 Each service communicates with others via gRPC for certain functionalities. Ensure gRPC communication settings in .env files are correctly configured with the appropriate host and port.
@@ -93,15 +93,15 @@ Each service communicates with others via gRPC for certain functionalities. Ensu
 Below are some sample endpoints for each service.
 
 User Service
--POST /api/v1/users/register: Register a new user.
--POST /api/v1/users/login: User login and receive JWT.
+- POST /api/v1/users/register: Register a new user.
+- POST /api/v1/users/login: User login and receive JWT.
 
 Book Service
--POST /api/v1/books: Add a new book.
--GET /api/v1/books/{id}: Retrieve book details.
--PUT /api/v1/books/{id}: Update book information.
--DELETE /api/v1/books/{id}: Delete a book.
+- POST /api/v1/books: Add a new book.
+- GET /api/v1/books/{id}: Retrieve book details.
+- PUT /api/v1/books/{id}: Update book information.
+- DELETE /api/v1/books/{id}: Delete a book.
 
 Borrowing Service
--POST /api/v1/borrowings: Borrow a book.
--POST /api/v1/borrowings/return: Return a book.
+- POST /api/v1/borrowings: Borrow a book.
+- POST /api/v1/borrowings/return: Return a book.
