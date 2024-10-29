@@ -1,4 +1,4 @@
-\***\*Library Management System\*\***
+***Library Management System***
 
 A scalable library management system built using a microservices architecture. This backend-only project provides RESTful APIs for managing books, authors, categories, users, and book borrowing operations. The project is developed with Golang, PostgreSQL for data storage, gRPC for inter-service communication, and Docker for containerization.
 
@@ -20,6 +20,8 @@ A scalable library management system built using a microservices architecture. T
 - Authentication: JWT
 - Containerization: Docker
 - Orchestration: Docker Compose
+- Migration : Goose
+- GORM
 
 **Microservices**
 The application is divided into several microservices, each with its own database:
