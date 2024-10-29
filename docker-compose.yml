@@ -1,29 +1,46 @@
 version: "3.8"
 
 services:
-  book-service:
-    build:
-      context: ./book-service
-    ports:
-      - "8081:8080"
   author-service:
-    build:
-      context: ./author-service
+    build: ./author-service
+    env_file: ./author-service/.env
     ports:
-      - "8082:8080"
+      - "8081:8081"
+    networks:
+      - library-network
+
+  book-service:
+    build: ./book-service
+    env_file: ./book-service/.env
+    ports:
+      - "8082:8082"
+    networks:
+      - library-network
+
   category-service:
-    build:
-      context: ./category-service
+    build: ./category-service
+    env_file: ./category-service/.env
     ports:
-      - "8083:8080"
+      - "8083:8083"
+    networks:
+      - library-network
+
   user-service:
-    build:
-      context: ./user-service
+    build: ./user-service
+    env_file: ./user-service/.env
     ports:
-      - "8084:8080"
+      - "8084:8084"
+    networks:
+      - library-network
 
   borrowing-service:
-    build:
-      context: ./user-service
+    build: ./borrowing-service
+    env_file: ./borrowing-service/.env
     ports:
-      - "8085:8080"
+      - "8085:8085"
+    networks:
+      - library-network
+
+networks:
+  library-network:
+    driver: bridge

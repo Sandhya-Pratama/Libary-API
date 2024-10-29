@@ -7,19 +7,15 @@ import (
 )
 
 type BorrowingBookUseCase interface {
-	// GetAllBorrowingBooks(ctx context.Context) ([]*entity.BorrowingBook, error)
-	CreateBorrowingBook(ctx context.Context, BorrowingBook *entity.BorrowingBook) error
-	// GetBorrowingBookByID(ctx context.Context, id int64) (*entity.BorrowingBook, error)
-	// UpdateBorrowingBook(ctx context.Context, BorrowingBook *entity.BorrowingBook) error
-	// DeleteBorrowingBook(ctx context.Context, id int64) error
+	BorrowBook(ctx context.Context, borrowingBook *entity.BorrowingBook) error
+	ReturnBook(ctx context.Context, borrowingBook *entity.BorrowingBook) error
+	GetBorrowingsByUser(ctx context.Context, userID int64) ([]*entity.BorrowingBook, error)
 }
 
 type BorrowingBookRepository interface {
-	// GetAllBorrowingBooks(ctx context.Context) ([]*entity.BorrowingBook, error)
-	CreateBorrowingBook(ctx context.Context, BorrowingBook *entity.BorrowingBook) error
-	// GetBorrowingBookByID(ctx context.Context, id int64) (*entity.BorrowingBook, error)
-	// UpdateBorrowingBook(ctx context.Context, BorrowingBook *entity.BorrowingBook) error
-	// DeleteBorrowingBook(ctx context.Context, id int64) error
+	BorrowBook(ctx context.Context, borrowingBook *entity.BorrowingBook) error
+	ReturnBook(ctx context.Context, borrowingBook *entity.BorrowingBook) error
+	GetBorrowingsByUser(ctx context.Context, userID int64) ([]*entity.BorrowingBook, error)
 }
 
 type BorrowingBookService struct {
@@ -32,23 +28,14 @@ func NewBorrowingBookService(repository BorrowingBookRepository) *BorrowingBookS
 	}
 }
 
-func (s *BorrowingBookService) CreateBorrowingBook(ctx context.Context, borrowingBook *entity.BorrowingBook) error {
-	// Lakukan penyimpanan borrowingBook melalui repository
-	if err := s.repository.CreateBorrowingBook(ctx, borrowingBook); err != nil {
-		return err // Mengembalikan error jika terjadi
-	}
-	// Jika berhasil, kembalikan nil
-	return nil
+func (s *BorrowingBookService) BorrowBook(ctx context.Context, borrowingBook *entity.BorrowingBook) error {
+	return s.repository.BorrowBook(ctx, borrowingBook)
 }
 
-// func (s *BorrowingBookService) GetBorrowingBookByID(ctx context.Context, id int64) (*entity.BorrowingBook, error) {
-// 	return s.repository.GetBorrowingBookByID(ctx, id)
-// }
+func (s *BorrowingBookService) ReturnBook(ctx context.Context, borrowingBook *entity.BorrowingBook) error {
+	return s.repository.ReturnBook(ctx, borrowingBook)
+}
 
-// func (s *BorrowingBookService) UpdateBorrowingBook(ctx context.Context, BorrowingBook *entity.BorrowingBook) error {
-// 	return s.repository.UpdateBorrowingBook(ctx, BorrowingBook)
-// }
-
-// func (s *BorrowingBookService) DeleteBorrowingBook(ctx context.Context, id int64) error {
-// 	return s.repository.DeleteBorrowingBook(ctx, id)
-// }
+func (s *BorrowingBookService) GetBorrowingsByUser(ctx context.Context, userID int64) ([]*entity.BorrowingBook, error) {
+	return s.repository.GetBorrowingsByUser(ctx, userID)
+}

@@ -37,10 +37,25 @@ func PrivateRoutes(borrowingBookHandler *handler.BorrowingBookHandler) []*Route 
 	return []*Route{
 		{
 			Method:  echo.POST,
-			Path:    "/users",
-			Handler: borrowingBookHandler.CreateBorrowingBook,
+			Path:    "/borrow",
+			Handler: borrowingBookHandler.BorrowBook,
 			Role:    onlyAdmin,
 		},
+
+		{
+			Method:  echo.GET,
+			Path:    "/borrowing/:id",
+			Handler: borrowingBookHandler.GetBorrowingsByUser,
+			Role:    onlyAdmin,
+		},
+
+		{
+			Method:  echo.PUT,
+			Path:    "/return/:id",
+			Handler: borrowingBookHandler.ReturnBook,
+			Role:    onlyAdmin,
+		},
+
 		// {
 		// 	Method:  echo.PUT,
 		// 	Path:    "/BorrowingBooks/:id",

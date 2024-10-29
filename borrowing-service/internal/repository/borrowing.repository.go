@@ -15,7 +15,7 @@ func NewBorrowingBookRepository(db *gorm.DB) *BorrowingBookRepository {
 	return &BorrowingBookRepository{db: db}
 }
 
-func (r *BorrowingBookRepository) CreateBorrowingBook(ctx context.Context, BorrowingBook *entity.BorrowingBook) error {
+func (r *BorrowingBookRepository) BorrowBook(ctx context.Context, BorrowingBook *entity.BorrowingBook) error {
 	err := r.db.WithContext(ctx).Create(&BorrowingBook).Error
 	if err != nil {
 		return err
@@ -23,16 +23,7 @@ func (r *BorrowingBookRepository) CreateBorrowingBook(ctx context.Context, Borro
 	return nil
 }
 
-func (r *BorrowingBookRepository) GetBorrowingBookByID(ctx context.Context, id int64) (*entity.BorrowingBook, error) {
-	var BorrowingBook entity.BorrowingBook
-	err := r.db.WithContext(ctx).Where("id = ?", id).First(&BorrowingBook).Error
-	if err != nil {
-		return nil, err
-	}
-	return &BorrowingBook, nil
-}
-
-func (r *BorrowingBookRepository) UpdateBorrowingBook(ctx context.Context, BorrowingBook *entity.BorrowingBook) error {
+func (r *BorrowingBookRepository) ReturnBook(ctx context.Context, BorrowingBook *entity.BorrowingBook) error {
 	err := r.db.WithContext(ctx).Model(&entity.BorrowingBook{}).Where("id = ?", BorrowingBook.ID).Updates(&BorrowingBook).Error
 	if err != nil {
 		return err
@@ -40,9 +31,11 @@ func (r *BorrowingBookRepository) UpdateBorrowingBook(ctx context.Context, Borro
 	return nil
 }
 
-func (r *BorrowingBookRepository) DeleteBorrowingBook(ctx context.Context, id int64) error {
-	if err := r.db.WithContext(ctx).Delete(&entity.BorrowingBook{}, id).Error; err != nil {
-		return err
+func (r *BorrowingBookRepository) GetBorrowingsByUser(ctx context.Context, userID int64) ([]*entity.BorrowingBook, error) {
+	var borrowings []*entity.BorrowingBook
+	err := r.db.WithContext(ctx).Where("user_id = ?", userID).Find(&borrowings).Error
+	if err != nil {
+		return nil, err
 	}
-	return nil
+	return borrowings, nil
 }

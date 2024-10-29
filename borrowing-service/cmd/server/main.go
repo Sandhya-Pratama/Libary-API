@@ -4,17 +4,21 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net"
 	"os"
 	"os/signal"
 	"strings"
 	"time"
 
+	pb "github.com/Sandhya-Pratama/Libary-API/borrowing-service/borrowing-service/common/proto"
 	"github.com/Sandhya-Pratama/Libary-API/borrowing-service/internal/builder"
 	"github.com/Sandhya-Pratama/Libary-API/borrowing-service/internal/config"
 	"github.com/Sandhya-Pratama/Libary-API/borrowing-service/internal/http/binder"
 	"github.com/Sandhya-Pratama/Libary-API/borrowing-service/internal/http/server"
 	"github.com/Sandhya-Pratama/Libary-API/borrowing-service/internal/http/validator"
+	"github.com/Sandhya-Pratama/Libary-API/borrowing-service/internal/service"
 	"github.com/labstack/echo/v4"
+	"google.golang.org/grpc"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -56,6 +60,9 @@ func main() {
 	//membuat start server
 	runServer(svr, cfg.Port)
 
+	// Menjalankan gRPC server di port 50051
+	runGRPCServer(db)
+
 	//membuat shutdown
 	waitForShutdown(svr)
 
@@ -69,6 +76,26 @@ func runServer(srv *server.Server, port string) {
 		err := srv.Start(fmt.Sprintf(":%s", port))
 		if err != nil {
 			log.Fatal(err)
+		}
+	}()
+}
+
+// Fungsi untuk menjalankan gRPC server
+func runGRPCServer(db *gorm.DB) {
+	go func() {
+		// Membuat instance BorrowingService
+		grpcServer := grpc.NewServer()
+		borrowingService := service.NewBorrowingService(db)
+		pb.RegisterBorrowingServiceServer(grpcServer, borrowingService)
+
+		// Mendengarkan pada port 50051 untuk gRPC server
+		listener, err := net.Listen("tcp", ":50051")
+		if err != nil {
+			log.Fatalf("Failed to listen on port 50051: %v", err)
+		}
+		fmt.Println("Starting gRPC server on port 50051")
+		if err := grpcServer.Serve(listener); err != nil {
+			log.Fatalf("Failed to serve gRPC server: %v", err)
 		}
 	}()
 }

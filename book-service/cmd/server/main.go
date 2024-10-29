@@ -4,17 +4,22 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net"
 	"os"
 	"os/signal"
 	"strings"
 	"time"
 
+	pb "github.com/Sandhya-Pratama/Libary-API/book-service/book-service/common/proto"
 	"github.com/Sandhya-Pratama/Libary-API/book-service/internal/builder"
 	"github.com/Sandhya-Pratama/Libary-API/book-service/internal/config"
 	"github.com/Sandhya-Pratama/Libary-API/book-service/internal/http/binder"
 	"github.com/Sandhya-Pratama/Libary-API/book-service/internal/http/server"
 	"github.com/Sandhya-Pratama/Libary-API/book-service/internal/http/validator"
+	"github.com/Sandhya-Pratama/Libary-API/book-service/internal/repository"
+	"github.com/Sandhya-Pratama/Libary-API/book-service/internal/service"
 	"github.com/labstack/echo/v4"
+	"google.golang.org/grpc"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -56,6 +61,9 @@ func main() {
 	//membuat start server
 	runServer(svr, cfg.Port)
 
+	// Menjalankan gRPC server pada port lain, misalnya 50051
+	runGRPCServer(db)
+
 	//membuat shutdown
 	waitForShutdown(svr)
 
@@ -69,6 +77,26 @@ func runServer(srv *server.Server, port string) {
 		err := srv.Start(fmt.Sprintf(":%s", port))
 		if err != nil {
 			log.Fatal(err)
+		}
+	}()
+}
+
+// funv untuk start gRPC server
+func runGRPCServer(db *gorm.DB) {
+	go func() {
+		// Membuat gRPC server
+		bookRepo := repository.NewBookRepository(db)
+		bookService := service.NewBookService(bookRepo)
+		grpcServer := grpc.NewServer()
+		pb.RegisterBookServiceServer(grpcServer, service.NewBookGRPCServer(bookService))
+
+		listener, err := net.Listen("tcp", ":50051") // gRPC server berjalan di port 50051
+		if err != nil {
+			log.Fatalf("Failed to listen on port 50051: %v", err)
+		}
+		fmt.Println("Starting gRPC server on port 50051")
+		if err := grpcServer.Serve(listener); err != nil {
+			log.Fatalf("Failed to serve gRPC server: %v", err)
 		}
 	}()
 }

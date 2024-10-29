@@ -1,11 +1,11 @@
 package handler
 
 import (
+	"context"
 	"net/http"
-	"time"
+	"strconv"
 
 	"github.com/Sandhya-Pratama/Libary-API/borrowing-service/entity"
-	"github.com/Sandhya-Pratama/Libary-API/borrowing-service/internal/http/validator"
 	"github.com/Sandhya-Pratama/Libary-API/borrowing-service/internal/service"
 	"github.com/labstack/echo/v4"
 )
@@ -14,41 +14,77 @@ type BorrowingBookHandler struct {
 	BorrowingBookService service.BorrowingBookUseCase
 }
 
+// NewBorrowingBookHandler creates a new BorrowingBookHandler with the provided BorrowingBookUseCase.
 func NewBorrowingBookHandler(BorrowingBookService service.BorrowingBookUseCase) *BorrowingBookHandler {
 	return &BorrowingBookHandler{BorrowingBookService}
 }
 
-// CreateBorrowingBook membuat peminjaman baru
-func (h *BorrowingBookHandler) CreateBorrowingBook(ctx echo.Context) error {
-	// Mendefinisikan struct input untuk menerima data JSON
-	var input struct {
-		UserID     int64      `json:"user_id" validate:"required"`
-		BookID     int64      `json:"book_id" validate:"required"`
-		BorrowDate time.Time  `json:"borrow_date" validate:"required"` // Tanggal Peminjaman
-		ReturnDate *time.Time `json:"return_date" validate:"required"` // Tanggal Pengembalian
+// BorrowBorrowingBook handles the HTTP request to borrow a BorrowingBook.
+func (h *BorrowingBookHandler) BorrowBook(ctx echo.Context) error {
+	userID, err := strconv.Atoi(ctx.FormValue("user_id"))
+	if err != nil {
+		return ctx.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid user_id"})
+	}
+	bookID, err := strconv.Atoi(ctx.FormValue("BorrowingBook_id"))
+	if err != nil {
+		return ctx.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid BorrowingBook_id"})
 	}
 
-	// Binding input JSON ke struct
-	if err := ctx.Bind(&input); err != nil {
-		return ctx.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid input"})
+	// Membuat instance BorrowingBook dan mengisi data
+	borrowingBook := &entity.BorrowingBook{
+		UserID: int64(userID),
+		BookID: int64(bookID),
 	}
 
-	// Memvalidasi input setelah proses binding
-	if err := ctx.Validate(input); err != nil {
-		return ctx.JSON(http.StatusBadRequest, map[string]interface{}{"error": "Validation failed", "details": validator.ValidatorErrors(err)})
+	// Memanggil service untuk meminjam buku
+	if err := h.BorrowingBookService.BorrowBook(context.Background(), borrowingBook); err != nil {
+		return ctx.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to borrow book"})
 	}
 
-	// Membuat objek BorrowingBook baru dengan data yang sudah tervalidasi
-	borrowingBook := entity.NewBorrowingBook(input.UserID, input.BookID, input.BorrowDate, input.ReturnDate)
+	// Membuat respons jika peminjaman berhasil
+	res := map[string]interface{}{
+		"message":     "Book borrowed successfully",
+		"borrowingId": borrowingBook.ID, // asumsikan ID dihasilkan oleh database saat peminjaman
+	}
+	return ctx.JSON(http.StatusOK, res)
+}
 
-	// Menggunakan service untuk membuat BorrowingBook baru di database
-	if err := h.BorrowingBookService.CreateBorrowingBook(ctx.Request().Context(), borrowingBook); err != nil {
-		return ctx.JSON(http.StatusUnprocessableEntity, map[string]string{"error": err.Error()})
+// ReturnBorrowingBook handles the HTTP request to return a BorrowingBook.
+func (h *BorrowingBookHandler) ReturnBook(ctx echo.Context) error {
+	returningID, err := strconv.Atoi(ctx.FormValue("returning_id"))
+	if err != nil {
+		return ctx.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid returning_id"})
 	}
 
-	// Mengembalikan respon JSON saat berhasil
-	return ctx.JSON(http.StatusCreated, map[string]interface{}{
-		"message":       "Borrowing book created successfully",
-		"borrowingBook": borrowingBook,
-	})
+	// Membuat instance BorrowingBook dan mengisi data
+	borrowingBook := &entity.BorrowingBook{
+		ID: int64(returningID),
+	}
+
+	// Memanggil service untuk mengembalikan buku
+	if err := h.BorrowingBookService.ReturnBook(context.Background(), borrowingBook); err != nil {
+		return ctx.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to return book"})
+	}
+
+	// Membuat respons jika pengembalian buku berhasil
+	res := map[string]interface{}{
+		"message": "Book returned successfully",
+	}
+	return ctx.JSON(http.StatusOK, res)
+}
+
+// GetBorrowingsByUser handles the HTTP request to get all borrowings for a user.
+func (h *BorrowingBookHandler) GetBorrowingsByUser(ctx echo.Context) error {
+	userID, err := strconv.Atoi(ctx.Param("user_id"))
+	if err != nil {
+		return ctx.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid user_id"})
+	}
+
+	// Call the service to get borrowings by user
+	res, err := h.BorrowingBookService.GetBorrowingsByUser(context.Background(), int64(userID))
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to fetch borrowings"})
+	}
+
+	return ctx.JSON(http.StatusOK, res)
 }

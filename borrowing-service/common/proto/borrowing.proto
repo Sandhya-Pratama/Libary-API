@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package borrowing;
+option go_package = "borrowing-service/common/proto;borrowing";
 
 service BorrowingService {
   rpc BorrowBook (BorrowRequest) returns (BorrowResponse);
